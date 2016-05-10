@@ -1,0 +1,11 @@
+// Includes
+#include <math.h>
+
+// Pin declares -- set in the HapkitDemo code
+int pwmPin = 5; // PWM output pin for the motor 
+int dirPin = 8; // direction output pin for the motor; positive or negative X  
+int sensorPosPin = A2; // input pin for MR sensor
+int fsrPin = A3; // input pin for FSR sensor
+
+double rs = 0.073152;   //[m]
+double rp = 0.004191;   //[m]
