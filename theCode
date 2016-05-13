@@ -7,5 +7,38 @@ int dirPin = 8; // direction output pin for the motor; positive or negative X
 int sensorPosPin = A2; // input pin for MR sensor
 int fsrPin = A3; // input pin for FSR sensor
 
+//
 double rs = 0.073152;   //[m]
 double rp = 0.004191;   //[m]
+
+
+
+//Code taken directly from Hapkit Demos file
+// --------------------------------------------------------------
+// Setup function -- NO NEED TO EDIT
+// --------------------------------------------------------------
+void setup() 
+{
+  // Set up serial communication
+  // Serial.begin(9600);
+  
+  // Set PWM frequency 
+  setPwmFrequency(pwmPin,1); 
+  
+  // Input pins
+  pinMode(sensorPosPin, INPUT); // set MR sensor pin to be an input
+  pinMode(fsrPin, INPUT);       // set FSR sensor pin to be an input
+
+  // Output pins
+  pinMode(pwmPin, OUTPUT);  // PWM pin for motor A
+  pinMode(dirPin, OUTPUT);  // dir pin for motor A
+  
+  // Initialize motor 
+  analogWrite(pwmPin, 0);     // set to not be spinning (0/255)
+  digitalWrite(dirPin, LOW);  // set direction
+  
+  // Initialize position valiables
+  lastLastRawPos = analogRead(sensorPosPin);
+  lastRawPos = analogRead(sensorPosPin);
+  flipNumber = 0;
+}
