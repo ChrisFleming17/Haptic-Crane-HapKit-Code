@@ -18,6 +18,6 @@ void draw(){
     val = myPort.readStringUntil('\n');  //read port and store in val variable
   }
   println(val); print out the port value to the console
-  
+}  
   
 ``` 
