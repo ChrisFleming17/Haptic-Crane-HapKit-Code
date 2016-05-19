@@ -6,15 +6,18 @@ import processing.serial.*;
 Serial myPort; // Create object from Serial class
 String val;     // Data received from the serial port
 
-//This code initializes with a mac and using port 0
-//windows port will need to be swtiched to a 1 or 2 
-//or some other value for the port you are using
-String  portName = Serial.list()[0];
-myPort = new Serial(this, portName, 9600);
+void setup() {
+
+  //This code initializes with a mac and using port 0
+  //windows port will need to be swtiched to a 1 or 2 
+  //or some other value for the port you are using
+  String portName = Serial.list()[1];
+  myPort = new Serial(this, portName, 9600);
+}
 
 //similar to arduino's void loop()
-void draw(){
-  if(myPort.available()>0){
+void draw() {
+  if (myPort.available()>0) {
     val = myPort.readStringUntil('\n');  //read port and store in val variable
   }
   println(val); //print out the port value to the console
