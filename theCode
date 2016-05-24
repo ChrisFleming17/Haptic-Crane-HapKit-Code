@@ -19,12 +19,14 @@ int updatedPos = 0;     // keeps track of the latest updated value of the MR sen
 int rawPos = 0;         // current raw reading from MR sensor
 int lastRawPos = 0;     // last raw reading from MR sensor
 int lastLastRawPos = 0; // last last raw reading from MR sensor
+
 int flipNumber = 0;     // keeps track of the number of flips over the 180deg mark
 int tempOffset = 0;
 int rawDiff = 0;
 int lastRawDiff = 0;
 int rawOffset = 0;
 int lastRawOffset = 0;
+
 const int flipThresh = 700;  // threshold to determine whether or not a flip over the 180 degree mark occurred
 boolean flipped = false;
 
@@ -32,6 +34,8 @@ boolean flipped = false;
 double m1 = 100; //[kg] mass that the crane is carrying
 double m2 = 300; //[kg] mass of the arm of the crane
 double l = 20; //[m] length of connection between m1 and m2
+double g = 9.86; //[m/s^2]
+double xdes = 0;
 
 // Kinematics variables
 double xh = 0;           // position of the handle [m]
@@ -51,7 +55,7 @@ double a = 0; //acceleration of m1
 double v = 0; //velocity of m1
 double x = 0; //position of m1
 
-double dt = 0.000005;//dt used for integration
+double dt = 0.0005;//dt used for integration
 
 
 // --------------------------------------------------------------
@@ -140,7 +144,10 @@ void loop()
   double xh = rh*tsrad;
   
   // Step 2.8: print xh via serial monitor
-  //Serial.println(xh,4);
+  float loc = 10000*xh;
+  int data = (int)loc + 500;
+  Serial.write(data);
+  //Serial.println(data);
   
   //*************************************************************
   //*** Section 3. Assign a motor output force in Newtons *******  
@@ -175,20 +182,20 @@ void loop()
   double k = 400; //[N/m]
   double b = 50; //[??]
 
-  a = ((m2*l/2)*((w^2)*sin(theta) - (alpha^2)*cos(theta)) - b*v - k*x)/(m1+m2); //equation of motion (1). Result used to get new alpha
+  a = ((m2*l/2)*(sq(w)*sin(theta) - sq(alpha)*cos(theta)) - b*v - k*x)/(m1+m2); //equation of motion (1). Result used to get new alpha
 
   alpha = -(3/(2*l))*(a*cos(theta) + g*sin(theta)); //equation of motion (2). Result used to get x, theta, and new a
   w = w + alpha*dt;
   theta = theta + w*dt;
 
-  a = ((m2*l/2)*((w^2)*sin(theta) - (alpha^2)*cos(theta)) - b*v - k*x)/(m1+m2); //equation of motion (1). Result used to get v and x
+  a = ((m2*l/2)*(sq(w)*sin(theta) - sq(alpha)*cos(theta)) - b*v - k*x)/(m1+m2); //equation of motion (1). Result used to get v and x
   v = v + a*dt;
-  x = x + v*t;
+  x = x + v*dt;
 
 
   
   double force = k*(xdes-xh);
-  t++;
+  //t++;
   //double wall = 0.015; //The location of the wall
   //double adjustment = -0.015; //The adjustment required to start the spring force at x=0
 //  if( abs(xh)>wall){
@@ -258,3 +265,4 @@ void setPwmFrequency(int pin, int divisor) {
     TCCR2B = TCCR2B & 0b11111000 | mode;
   }
 }
+
