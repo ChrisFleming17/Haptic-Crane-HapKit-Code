@@ -4,26 +4,49 @@ import processing.serial.*;
 Serial myPort; //Create object from Serial Class
 int val; //Data recieved from the serial port
 //int adj = 10000; //multiplication factor for the location of the rectangle
+float inByte=0;
+
 
 void setup(){
   String portName = Serial.list()[1];
-  myPort = new Serial(this, portName, 9600);
+  myPort = new Serial(this, portName, 57600);
   size(1000,1000);
   stroke(0,0,0);
   rectMode(CENTER);
+  // A serialEvent() is generated when a newline character is received :
+  myPort.bufferUntil('\n');
 }
 
 void draw(){
-  float x = 0; //x position of rectangle
+  int x = 0; //x position of rectangle
   background(0);
   fill(255);
-  if(myPort.available()>0){
-    val = myPort.read();
-  }
-  //if(val == 1){
-    x = val;
-    println(x);
-    fill(204, 102, 0);
-    rect(x, width/2, 70, 70);
+  //if(myPort.available()>0){
+  //  val = myPort.read();
+  //}else{
+  // println("false"); 
   //}
+  //if(val == 1){
+    //x = val;
+   // println(x);
+    fill(204, 102, 0);
+    rect(inByte, width/2, 70, 70);
+  //}
+}
+  
+  void serialEvent (Serial myPort) {
+  // get the ASCII string:
+  String inString = myPort.readStringUntil('\n');
+  if (inString != null) {
+    inString = trim(inString);                // trim off whitespaces.
+    inByte = float(inString);           // convert to a number.
+    inByte = map(inByte, -.1, .1, 0, height); //map to the screen height.
+
+    ////Drawing a line from Last inByte to the new one.
+    //stroke(127,34,255);     //stroke color
+    //strokeWeight(10);        //stroke width
+    
+    //lastxPos= xPos;
+    //lastheight= int(height-inByte);
+  }
 }
