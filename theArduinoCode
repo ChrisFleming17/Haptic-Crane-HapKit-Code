@@ -7,6 +7,8 @@
 // Includes
 #include <math.h>
 
+int data = 0;
+
 // Pin declares
 int pwmPin = 5; // PWM output pin for motor 1
 int dirPin = 8; // direction output pin for motor 1
@@ -64,7 +66,7 @@ double dt = 0.0005;//dt used for integration
 void setup() 
 {
   // Set up serial communication
-  Serial.begin(9600);
+  Serial.begin(57600);
   
   // Set PWM frequency 
   setPwmFrequency(pwmPin,1); 
@@ -144,9 +146,12 @@ void loop()
   double xh = rh*tsrad;
   
   // Step 2.8: print xh via serial monitor
-  float loc = 10000*xh;
-  int data = (int)loc + 500;
-  Serial.write(data);
+  //double loc = 10000*xh;
+  //data = (int)loc + 500;
+  //data = data + 1;
+  //Serial.print(data);
+  //Serial.print("  ");
+  Serial.println(xh, 4);
   //Serial.println(data);
   
   //*************************************************************
@@ -265,4 +270,3 @@ void setPwmFrequency(int pin, int divisor) {
     TCCR2B = TCCR2B & 0b11111000 | mode;
   }
 }
-
