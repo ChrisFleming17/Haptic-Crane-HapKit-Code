@@ -32,6 +32,15 @@ void draw(){
     fill(204, 102, 0);
     rect(inByte, width/2, 70, 70);
   //}
+  
+  //****************************************************
+  //*******New Code for pendulum mass and string*******
+  int xEllipse = 0; //x position of the pendulum mass
+  background(0);
+  //fill();
+  ellipse(cirByte, width/2, 56, 56);
+  
+  line(inByte,width/2,cirByte,(width/2)+10);
 }
   
   void serialEvent (Serial myPort) {
