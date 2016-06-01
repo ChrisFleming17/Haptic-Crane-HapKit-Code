@@ -1,0 +1,70 @@
+
+import processing.serial.*;
+
+Serial myPort; //Create object from Serial Class
+int val; //Data recieved from the serial port
+//int adj = 10000; //multiplication factor for the location of the rectangle
+float inByte=0;
+float THETA=0; //passed in from serial moniter after being calculated from x
+float angle = radians(THETA); //processing can only deal with radians
+
+
+void setup(){
+  String portName = Serial.list()[1];
+  myPort = new Serial(this, portName, 57600);
+  size(1000,1000);
+  stroke(0,0,0);
+  rectMode(CENTER);
+  // A serialEvent() is generated when a newline character is received :
+  myPort.bufferUntil('\n');
+}
+
+void draw(){
+  float xRect = inByte; //x position of rectangle -- changing
+  int yRect = width/2; //y position of the rectangle -- constant
+  background(0);
+  fill(255);
+  //if(myPort.available()>0){
+  //  val = myPort.read();
+  //}else{
+  // println("false"); 
+  //}
+  //if(val == 1){
+    //x = val;
+   // println(x);
+    fill(204, 102, 0);
+    rect(xRect, yRect, 70, 70);
+  //}
+  
+  
+  //create and ellipse that will alter its x and y position as the rectagle moves
+  float xEllipse = xRect; //x position of the pendulum mass -- changing
+  int yEllipse = 0; //y position fo the pendulum mall -- changing
+  stroke(255);
+  fill(255);
+  ellipse(xEllipse, yEllipse, 50, 50);
+  
+  //create a line that just moves with the centers of the shapes
+  stroke(204, 102, 0);
+  fill(255);
+  line(xRect+35,yRect+35,xEllipse+25,yEllipse+25);
+  
+  
+}
+  
+  void serialEvent (Serial myPort) {
+  // get the ASCII string:
+  String inString = myPort.readStringUntil('\n');
+  if (inString != null) {
+    inString = trim(inString);                // trim off whitespaces.
+    inByte = float(inString);           // convert to a number.
+    inByte = map(inByte, -.1, .1, 0, height); //map to the screen height.
+
+    ////Drawing a line from Last inByte to the new one.
+    //stroke(127,34,255);     //stroke color
+    //strokeWeight(10);        //stroke width
+    
+    //lastxPos= xPos;
+    //lastheight= int(height-inByte);
+  }
+}
